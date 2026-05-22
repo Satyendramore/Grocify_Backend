@@ -1,0 +1,27 @@
+# ==========================================
+# Copy this file to application.properties
+# and fill in your actual values
+# ==========================================
+
+# Database
+spring.datasource.url=jdbc:mysql://localhost:3306/YOUR_DB_NAME
+spring.datasource.username=YOUR_DB_USERNAME
+spring.datasource.password=YOUR_DB_PASSWORD
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.hibernate.ddl-auto=update
+
+# Server
+server.port=8080
+spring.output.ansi.enabled=ALWAYS
+
+# Razorpay (get from https://dashboard.razorpay.com)
+razorpay.key=rzp_test_YOUR_KEY_HERE
+razorpay.secret=YOUR_RAZORPAY_SECRET_HERE
+
+# JWT (generate a Base64-encoded 256-bit secret)
+jwt.secret=YOUR_BASE64_ENCODED_SECRET_HERE
+jwt.expiration=86400000
+
+# Ollama AI (make sure Ollama is running locally)
+spring.ai.ollama.base-url=http://localhost:11434
+spring.ai.ollama.chat.options.model=phi3
