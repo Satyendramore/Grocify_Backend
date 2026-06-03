@@ -55,12 +55,12 @@ src/main/java/Grocify/GrocifyNear/
 ### Prerequisites
 
 - Java 17+
-- MySQL running locally
+- MySQL running locally (or Docker)
 - Maven
 - [Ollama](https://ollama.com) installed and running (`ollama serve`)
 - A Razorpay test account
 
-### Setup
+### Quick Start (Local)
 
 1. **Clone the repo**
    ```bash
@@ -81,7 +81,7 @@ src/main/java/Grocify/GrocifyNear/
 
 4. **Create the database**
    ```sql
-   CREATE DATABASE GrocifyNear;
+   CREATE DATABASE Grocify;
    ```
 
 5. **Run the app**
@@ -89,6 +89,42 @@ src/main/java/Grocify/GrocifyNear/
    ./mvnw spring-boot:run
    ```
    App starts on `http://localhost:8080`
+
+---
+
+### Docker Deployment
+
+Run the entire stack (MySQL + Ollama + Spring Boot app) with a single command:
+
+1. **Set up environment**
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` and add your Razorpay keys and JWT secret.
+
+2. **Start all services**
+   ```bash
+   docker-compose up --build
+   ```
+
+3. **Pull the Ollama model** (one-time, in a new terminal)
+   ```bash
+   docker exec grocifynear-ollama ollama pull phi3
+   ```
+
+4. **Access the app**
+   - API: `http://localhost:8080`
+   - Swagger UI: `http://localhost:8080/swagger-ui.html`
+
+**To stop:**
+```bash
+docker-compose down
+```
+
+**To rebuild the image:**
+```bash
+docker-compose build --no-cache
+```
 
 ---
 
