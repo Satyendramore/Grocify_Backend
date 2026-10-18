@@ -19,6 +19,11 @@ public ResponseEntity<?> findAllProducts() {
     return  new ResponseEntity<>(new ApiResponse<>("All product list",true,productService.getProducts()), HttpStatus.OK);
 }
 
+@GetMapping("/{shopId}")
+public ResponseEntity<?> findAllProductsByShopId(@PathVariable Long shopId) {
+    return  new ResponseEntity<>(new ApiResponse<>("All Products by ShopId",true,productService.getProductsByShopId(shopId)),HttpStatus.OK);
+}
+
 @PostMapping("/{shopId}")
     public ResponseEntity<?> addProductsByShopId(@PathVariable("shopId") Long shopId, @Valid @RequestBody ProductRequestDto productRequestDto) {
     return  new ResponseEntity<>(new ApiResponse<>(null,true,productService.addProduct(shopId,productRequestDto)), HttpStatus.ACCEPTED);

@@ -1,5 +1,6 @@
 package Grocify.GrocifyNear.dto.RequestDto;
 
+import Grocify.GrocifyNear.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -11,5 +12,5 @@ public class LoginRequestDto {
     private String email;
     @NotBlank(message = "Password is required")
     private String password;
-    private String roleName;
+    private Role roleName;
 }

@@ -6,5 +6,6 @@ public enum Role {
 
     SHOP_OWNER,
 
-    ADMIN
+    ADMIN,
+    RIDER
 }

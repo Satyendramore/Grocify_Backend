@@ -11,5 +11,6 @@ public class CartItemResponseDto {
     private long quantity;
     private double subtotal;
     private String productName;
+    private Long cartItemId;
     private Long cost;
 }

@@ -22,6 +22,9 @@ public class User
     private String userName;
     private String password;
     private String email;
+    private String age;
+    private String gender;
+    private String phoneNo;
     @OneToOne(mappedBy="user")
     @JsonIgnore
     private Cart cart;
@@ -30,5 +33,8 @@ public class User
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Order> orders;
+
+    @OneToOne(mappedBy = "user" , cascade = CascadeType.ALL)
+    private Rider rider;
 
 }

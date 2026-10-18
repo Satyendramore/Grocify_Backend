@@ -2,8 +2,10 @@ package Grocify.GrocifyNear.controller;
 
 import Grocify.GrocifyNear.dto.RequestDto.LoginRequestDto;
 import Grocify.GrocifyNear.dto.RequestDto.UserRequestDto;
+import Grocify.GrocifyNear.dto.RequestDto.UserUpdateRequestDto;
 import Grocify.GrocifyNear.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.boot.webmvc.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/user")
 public class UserController {
     private final UserService userService;
-    public UserController(UserService userService) {
+    private final ErrorController errorController;
+
+    public UserController(UserService userService, ErrorController errorController) {
         this.userService = userService;
+        this.errorController = errorController;
     }
 
     @GetMapping("/shop/nearby")
@@ -37,8 +42,15 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateUser(@Valid @RequestBody UserRequestDto user) {
+    public ResponseEntity<?> updateUser(@Valid @RequestBody UserUpdateRequestDto user) {
         return new ResponseEntity<>(new ApiResponse<>(null, true, userService.updateUser(user)), HttpStatus.OK);
     }
+
+
+    @GetMapping()
+    public ResponseEntity<?> getUser() {
+        return  new ResponseEntity<>(new ApiResponse<>("User Info",true,userService.getUser()),HttpStatus.OK);
+    }
+
 
 }

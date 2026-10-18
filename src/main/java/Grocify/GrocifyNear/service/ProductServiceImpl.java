@@ -10,6 +10,7 @@ import Grocify.GrocifyNear.repository.ProductRepo;
 import Grocify.GrocifyNear.repository.ShopRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
@@ -77,6 +78,15 @@ public ProductServiceImpl(ProductRepo productRepo, ShopRepo shopRepo, ProductMap
        throw new Failed("Failed to delete product because of this exception :" + e.getMessage());
     }
 
+    }
+
+    @Override
+    public List<Product> getProductsByShopId(Long shopId) {
+    Shop shop=shopRepo.findById(shopId).orElse(null);
+    if(shop==null){
+        throw new ResourceNotAvailable("Shop doesn't exist");
+    }
+      return productRepo.findByShop(shop);
     }
 
 

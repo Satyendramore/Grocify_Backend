@@ -5,6 +5,8 @@ import Grocify.GrocifyNear.model.Product;
 import Grocify.GrocifyNear.model.Shop;
 
 import java.util.List;
+import java.util.Locale;
+
 public interface ProductService {
     List<Product> getProducts();
 
@@ -13,4 +15,6 @@ public interface ProductService {
     String updateProduct(Long id, ProductRequestDto productRequestDto);
 
     String deleteProduct(Long id);
+
+    List<Product> getProductsByShopId(Long shopId);
 }

@@ -2,8 +2,11 @@ package Grocify.GrocifyNear.service;
 
 import Grocify.GrocifyNear.dto.RequestDto.LoginRequestDto;
 import Grocify.GrocifyNear.dto.RequestDto.UserRequestDto;
+import Grocify.GrocifyNear.dto.RequestDto.UserUpdateRequestDto;
 import Grocify.GrocifyNear.dto.ResponseDto.NearbyShopResponseDto;
 import Grocify.GrocifyNear.dto.ResponseDto.ProductResponseDto;
+import Grocify.GrocifyNear.dto.ResponseDto.UserResponseDto;
+import Grocify.GrocifyNear.enums.Role;
 import Grocify.GrocifyNear.security.JwtService;
 import Grocify.GrocifyNear.handler.Failed;
 import Grocify.GrocifyNear.handler.ResourceNotAvailable;
@@ -19,6 +22,8 @@ import Grocify.GrocifyNear.repository.ShopRepo;
 import Grocify.GrocifyNear.repository.UserRepo;
 import Grocify.GrocifyNear.util.DistanceUtil;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -116,12 +121,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String updateUser(UserRequestDto userRequestDto) {
+    public String updateUser(UserUpdateRequestDto userRequestDto) {
         try {
             User existing = userRepo.findByEmail(userRequestDto.getEmail())
                     .orElseThrow(() -> new ResourceNotAvailable("User not found"));
-            userMapper.userFromUserRequestDto(existing, userRequestDto);
-            existing.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
+
+            userMapper.userFromUserUpdateRequestDto(existing, userRequestDto);
             userRepo.save(existing);
             return "User info updated successfully";
         } catch (ResourceNotAvailable e) {
@@ -135,10 +140,27 @@ public class UserServiceImpl implements UserService {
     public String login(LoginRequestDto dto) {
         User user = userRepo.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new ResourceNotAvailable("User not found"));
-        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
-            throw new Failed("Invalid email or password");
+        if(!user.getRole().equals(dto.getRoleName())) {
+            throw new Failed("You are not allowed to login");
         }
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            throw new Failed("Invalid password");
+        }
+
+
         return jwtService.generateToken(user.getEmail(), user.getRole().name());
+    }
+
+    @Override
+    public UserResponseDto getUser() {
+       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+       String email = authentication.getName();
+       User user=userRepo.getUsersByEmail(email);
+       if(user==null) {
+           throw new ResourceNotAvailable("User not found");
+       }
+       UserResponseDto userResponseDto = userMapper.userResponseDtofromuser(user);
+       return userResponseDto;
     }
 
 

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -30,6 +31,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
 
@@ -41,12 +43,11 @@ public class SecurityConfig {
                                 "/webjars/**"
                         ).permitAll()
 
-                                // PUBLIC
-
-                                .requestMatchers(
-                                        "/api/v1/user/register",
-                                        "/api/v1/user/login"
-                                ).permitAll()
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/v1/user/register",
+                                "/api/v1/user/login"
+                        ).permitAll()
 
                                 // PUBLIC GET APIs
 
@@ -56,7 +57,7 @@ public class SecurityConfig {
                                         "/api/v1/shop/**",
                                         "/api/v1/user/products/compare",
                                         "/api/v1/user/shop/nearby"
-                                ).permitAll()
+                                ).hasRole("USER")
 
 
                                 .requestMatchers(
